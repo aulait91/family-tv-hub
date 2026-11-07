@@ -6,52 +6,128 @@
   <meta name="color-scheme" content="dark">
   <title>우리집 영상관</title>
   <style>
-    :root { font-family: system-ui, -apple-system, 'Noto Sans KR', sans-serif; color:#f7f9fc; background:#101b27; font-synthesis:none; }
-    * { box-sizing: border-box; }
-    body { margin:0; min-height:100vh; min-height:100dvh; background:radial-gradient(circle at 50% -10%, #263c50 0%, #101b27 62%); }
-    .shell { max-width:1680px; margin:auto; padding:clamp(20px,4vh,58px) clamp(22px,5vw,75px) 60px; }
-    header { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:clamp(28px,4vh,54px); }
-    h1 { font-size:clamp(36px,4.3vw,66px); margin:0; font-weight:850; letter-spacing:-.04em; }
-    .mark { font-size:clamp(35px,4vw,60px); }
-    .subtitle { color:#c8d8e8; margin:0 0 46px; font-size:clamp(20px,2vw,29px); }
-    .menu { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:clamp(18px,2.5vw,42px); }
-    .items { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; }
-    button, a { -webkit-tap-highlight-color:transparent; }
-    .tile { appearance:none; border:4px solid transparent; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:20px; padding:30px; min-height:clamp(215px,29vh,340px); border-radius:24px; background:#283b50; color:#fff; font-size:clamp(30px,3.2vw,52px); font-weight:750; text-decoration:none; cursor:pointer; box-shadow:0 8px 24px #0002; transition:background .12s,transform .12s,border-color .12s; }
-    .tile:nth-child(2) { background:#29484b; } .tile:nth-child(3) { background:#49405d; } .tile:nth-child(4) { background:#594638; }
-    .tile .emoji { font-size:clamp(46px,4.7vw,76px); line-height:1; }
-    .tile:hover, .item:hover, .back:hover { border-color:#87d1ff; }
-    .tile:focus-visible, .item:focus-visible, .back:focus-visible, .tile.remote-selected, .item.remote-selected, .back.remote-selected {
-      outline:6px solid #fff; outline-offset:3px; border-color:#4cc3ff; background:#285e84; transform:scale(1.015); z-index:1;
+    :root {
+      font-family: system-ui, -apple-system, 'Noto Sans KR', sans-serif;
+      color:#f7f9fc;
+      background:#091422;
+      font-synthesis:none;
+      --bg-a:#07101b;
+      --bg-b:#13263b;
+      --panel:#20364b;
+      --panel-soft:#2a435c;
+      --text-soft:#c9d8e7;
+      --focus:#8fd7ff;
+      --shadow:0 18px 46px rgba(0,0,0,.28);
+      --shadow-soft:0 10px 26px rgba(0,0,0,.18);
     }
-    .titlebar { display:flex; align-items:center; gap:20px; margin-bottom:24px; }
-    .titlebar h2 { margin:0; font-size:clamp(31px,3.4vw,50px); letter-spacing:-.035em; }
-    .back { color:#fff; background:#2e4053; border:3px solid transparent; border-radius:15px; font-size:clamp(20px,2vw,28px); min-height:65px; padding:8px 24px; cursor:pointer; white-space:nowrap; }
-    .item { display:flex; justify-content:center; align-items:center; text-align:center; min-height:135px; border-radius:18px; border:3px solid transparent; padding:20px; color:white; background:#2b4054; text-decoration:none; font-size:clamp(23px,2.2vw,32px); font-weight:720; line-height:1.35; overflow-wrap:anywhere; cursor:pointer; }
-    .item.missing { color:#c3ccd5; background:#28323e; cursor:default; }
-    .empty { background:#253449; border-radius:18px; padding:28px; font-size:25px; color:#d5e2ee; }
-    .foot { color:#9caec0; text-align:center; font-size:clamp(15px,1.4vw,20px); margin-top:32px; line-height:1.6; }
-    .error { color:#ffe8ca; background:#593b24; border-radius:15px; padding:20px; font-size:21px; }
+    * { box-sizing: border-box; }
+    body {
+      margin:0; min-height:100vh; min-height:100dvh;
+      background:
+        radial-gradient(circle at 50% -15%, rgba(90,134,181,.40) 0%, rgba(90,134,181,0) 34%),
+        linear-gradient(90deg, #06101a 0%, #17304a 50%, #06101a 100%);
+    }
+    .shell { max-width:1500px; margin:auto; padding:clamp(26px,4vh,58px) clamp(26px,5vw,82px) 64px; }
+    header { display:flex; align-items:flex-start; justify-content:space-between; gap:18px; margin-bottom:clamp(26px,3.8vh,48px); }
+    .branding { display:flex; flex-direction:column; gap:10px; }
+    h1 { font-size:clamp(48px,5vw,76px); margin:0; font-weight:850; letter-spacing:-.045em; line-height:1.02; }
+    .header-copy { color:var(--text-soft); font-size:clamp(18px,1.75vw,25px); margin:0; }
+    .mark {
+      width:78px; height:78px; display:grid; place-items:center; flex:none;
+      font-size:42px; border-radius:24px;
+      background:linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.05));
+      box-shadow:var(--shadow-soft); border:1px solid rgba(255,255,255,.08);
+      backdrop-filter: blur(8px);
+    }
+    .subtitle { color:#d8e6f3; margin:0 0 28px; font-size:clamp(22px,2.1vw,30px); }
+    .menu { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:clamp(22px,2.5vw,34px); }
+    .items { display:grid; grid-template-columns:1fr; gap:18px; width:100%; max-width:1150px; }
+    button, a { -webkit-tap-highlight-color:transparent; }
+    .tile {
+      appearance:none; border:3px solid rgba(255,255,255,.05); display:flex; flex-direction:column;
+      align-items:center; justify-content:center; text-align:center; gap:18px;
+      padding:30px; min-height:clamp(208px,30vh,310px); border-radius:30px;
+      background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+      color:#fff; font-size:clamp(34px,3.3vw,52px); font-weight:800; text-decoration:none; cursor:pointer;
+      box-shadow:var(--shadow); transition:background .14s,transform .14s,border-color .14s, box-shadow .14s;
+      backdrop-filter: blur(12px);
+    }
+    .tile:nth-child(1) { background:linear-gradient(180deg, rgba(86,135,183,.28), rgba(44,70,101,.95)); }
+    .tile:nth-child(2) { background:linear-gradient(180deg, rgba(86,173,161,.24), rgba(37,85,88,.96)); }
+    .tile:nth-child(3) { background:linear-gradient(180deg, rgba(137,109,183,.24), rgba(78,68,109,.96)); }
+    .tile:nth-child(4) { background:linear-gradient(180deg, rgba(179,129,88,.22), rgba(98,74,57,.96)); }
+    .tile .emoji { font-size:clamp(56px,5.2vw,82px); line-height:1; filter:drop-shadow(0 6px 10px rgba(0,0,0,.20)); }
+    .tile:hover, .item:hover, .back:hover { border-color:#92daff; }
+    .tile:focus-visible, .item:focus-visible, .back:focus-visible,
+    .tile.remote-selected, .item.remote-selected, .back.remote-selected {
+      outline:4px solid rgba(255,255,255,.92); outline-offset:4px; border-color:var(--focus);
+      box-shadow:0 0 0 7px rgba(79,196,255,.28), var(--shadow);
+      transform:translateY(-3px) scale(1.012); z-index:1;
+    }
+    .titlebar { display:flex; align-items:center; gap:22px; margin-bottom:28px; }
+    .back {
+      color:#fff; background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.05));
+      border:3px solid rgba(255,255,255,.06); border-radius:24px; font-size:clamp(22px,1.9vw,28px);
+      min-width:180px; min-height:94px; padding:10px 24px; cursor:pointer; white-space:nowrap;
+      display:flex; align-items:center; justify-content:center; gap:12px; box-shadow:var(--shadow-soft);
+      font-weight:800; backdrop-filter: blur(10px);
+    }
+    .back .icon { font-size:32px; line-height:1; }
+    .back .label { display:flex; flex-direction:column; align-items:flex-start; line-height:1.1; }
+    .back .label small { font-size:.76em; color:#c7d8e7; font-weight:700; }
+    .item {
+      display:flex; justify-content:flex-start; align-items:center; text-align:left;
+      min-height:118px; border-radius:24px; border:3px solid rgba(255,255,255,.05); padding:24px 30px;
+      color:white; background:linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+      text-decoration:none; font-size:clamp(28px,2.3vw,38px); font-weight:760; line-height:1.3;
+      overflow-wrap:anywhere; cursor:pointer; box-shadow:var(--shadow-soft);
+    }
+    .item.missing { color:#c3ccd5; background:linear-gradient(180deg, rgba(84,92,105,.35), rgba(49,58,69,.82)); cursor:default; }
+    .empty, .error {
+      background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+      border-radius:22px; padding:26px 28px; font-size:24px; color:#dce7f1;
+      border:1px solid rgba(255,255,255,.07);
+    }
+    .foot { color:#a8bbcf; text-align:center; font-size:clamp(16px,1.35vw,21px); margin-top:34px; line-height:1.65; }
+    .error { color:#fff1dd; background:linear-gradient(180deg, rgba(133,91,49,.55), rgba(85,56,28,.95)); }
     [hidden] { display:none !important; }
-    @media(max-width:720px) { .items {grid-template-columns:repeat(2,minmax(0,1fr));} .item{min-height:110px;} .titlebar{flex-wrap:wrap;} }
-    @media(max-width:430px) { .shell{padding:20px 16px 36px;} .subtitle{margin-bottom:24px;} .menu{gap:10px;} .tile{min-height:135px;padding:14px;border-radius:17px;font-size:24px;} .items{grid-template-columns:1fr;} .tile .emoji{font-size:34px;} }
-    @media(prefers-reduced-motion:reduce) { .tile {transition:none;} }
+    @media(max-width:900px) {
+      .titlebar{align-items:stretch; flex-direction:column;}
+      .back{width:100%; justify-content:flex-start;}
+    }
+    @media(max-width:720px) {
+      .menu { grid-template-columns:1fr; }
+      .tile { min-height:160px; }
+      .items { max-width:none; }
+    }
+    @media(max-width:430px) {
+      .shell{padding:18px 16px 32px;} .menu{gap:12px;} .tile{min-height:138px;padding:18px;border-radius:22px;font-size:26px;} .items{grid-template-columns:1fr;} .tile .emoji{font-size:42px;} .back{min-height:82px; min-width:unset; width:100%;}
+    }
+    @media(prefers-reduced-motion:reduce) { .tile, .item, .back {transition:none;} }
   </style>
 </head>
 <body>
   <main class="shell">
-    <header><h1>우리집 영상관</h1><div class="mark" aria-hidden="true">🏠</div></header>
+    <header>
+      <div class="branding">
+        <h1 id="page-title">우리집 영상관</h1>
+        <p id="header-copy" class="header-copy">부모님이 편하게 볼 수 있게 만든 우리집 전용 영상관이에요.</p>
+      </div>
+      <div id="brand-mark" class="mark" aria-hidden="true">🏠</div>
+    </header>
     <section id="home">
       <p class="subtitle">보고 싶은 곳을 선택하세요</p>
       <div class="menu" id="menu"></div>
     </section>
     <section id="listing" hidden>
-      <div class="titlebar"><button id="back" class="back remote-focus" type="button">← 처음으로</button><h2 id="category-title"></h2></div>
+      <div class="titlebar">
+        <button id="back" class="back remote-focus" type="button"><span class="icon" aria-hidden="true">🏠</span><span class="label"><span>처음으로</span><small>홈으로 돌아가기</small></span></button>
+      </div>
       <div class="items" id="items"></div>
     </section>
     <p id="error" class="error" hidden></p>
     <p id="sync-status" class="foot" hidden></p>
-    <p class="foot">방향키로 이동 · 확인 버튼으로 선택 · 뒤로 가기로 이전 화면</p>
+    <p id="guide-text" class="foot">방향키로 이동 · 확인 버튼으로 선택 · 뒤로 가기로 이전 화면</p>
   </main>
   <script src="catalog.js"></script>
   <script src="firebase-config.js"></script>
@@ -61,16 +137,19 @@
     (function () {
       'use strict';
       var categories = [
-        {id:'drama',title:'드라마',icon:'📺'},
-        {id:'movie',title:'영화',icon:'🎬'},
+        {id:'drama',title:'드라마',icon:'🖥️'},
+        {id:'movie',title:'영화',icon:'🎞️'},
         {id:'variety',title:'예능',icon:'🎭'},
-        {id:'favorites',title:'자주 보기',icon:'❤️'}
+        {id:'favorites',title:'자주 보기',icon:'💖'}
       ];
       var home = document.getElementById('home');
       var listing = document.getElementById('listing');
       var menu = document.getElementById('menu');
       var items = document.getElementById('items');
-      var titleEl = document.getElementById('category-title');
+      var pageTitle = document.getElementById('page-title');
+      var headerCopy = document.getElementById('header-copy');
+      var guideText = document.getElementById('guide-text');
+      var brandMark = document.getElementById('brand-mark');
       var errorEl = document.getElementById('error');
       var backBtn = document.getElementById('back');
       var records = Array.isArray(window.SITE_CATALOG) ? window.SITE_CATALOG : [];
@@ -142,10 +221,20 @@
         var id=decodeURIComponent(location.hash.replace(/^#/,''));
         var cat=categories.find(function(c){return c.id===id;});
         var isListing=Boolean(cat);
-        home.hidden=isListing; listing.hidden=!isListing;
+        home.hidden=isListing; listing.hidden=!isListing; brandMark.hidden=isListing;
         errorEl.hidden=true;
-        if(!isListing){ document.title='우리집 영상관'; addClassFocus(null); return; }
-        document.title=cat.title+' · 우리집 영상관'; titleEl.textContent=cat.title;
+        if(!isListing){
+          document.title='우리집 영상관';
+          pageTitle.textContent='우리집 영상관';
+          headerCopy.textContent='부모님이 편하게 볼 수 있게 만든 우리집 전용 영상관이에요.';
+          guideText.textContent='방향키로 이동 · 확인 버튼으로 선택 · 뒤로 가기로 이전 화면';
+          addClassFocus(null);
+          return;
+        }
+        document.title=cat.title+' · 우리집 영상관';
+        pageTitle.textContent=cat.title;
+        headerCopy.textContent='보고 싶은 작품을 골라 바로 재생하세요.';
+        guideText.textContent='위아래 방향키로 이동 · 확인 버튼으로 선택 · 뒤로 가기로 이전 화면';
         items.textContent='';
         var entries=records.filter(function(item){return item && (id==='favorites'? item.favorite===true : item.category===id);});
         if(!entries.length){var empty=document.createElement('p'); empty.className='empty'; empty.textContent='아직 등록된 작품이 없어요.';items.appendChild(empty);}
