@@ -31,7 +31,6 @@
     header { display:flex; align-items:flex-start; justify-content:space-between; gap:18px; margin-bottom:clamp(26px,3.8vh,48px); }
     .branding { display:flex; flex-direction:column; gap:10px; }
     h1 { font-size:clamp(48px,5vw,76px); margin:0; font-weight:850; letter-spacing:-.045em; line-height:1.02; }
-    .header-copy { color:var(--text-soft); font-size:clamp(18px,1.75vw,25px); margin:0; }
     .mark {
       width:78px; height:78px; display:grid; place-items:center; flex:none;
       font-size:42px; border-radius:24px;
@@ -39,7 +38,6 @@
       box-shadow:var(--shadow-soft); border:1px solid rgba(255,255,255,.08);
       backdrop-filter: blur(8px);
     }
-    .subtitle { color:#d8e6f3; margin:0 0 28px; font-size:clamp(22px,2.1vw,30px); }
     .menu { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:clamp(22px,2.5vw,34px); }
     .items { display:grid; grid-template-columns:1fr; gap:18px; width:100%; max-width:1150px; }
     button, a { -webkit-tap-highlight-color:transparent; }
@@ -74,7 +72,6 @@
     }
     .back .icon { font-size:32px; line-height:1; }
     .back .label { display:flex; flex-direction:column; align-items:flex-start; line-height:1.1; }
-    .back .label small { font-size:.76em; color:#c7d8e7; font-weight:700; }
     .item {
       display:flex; justify-content:flex-start; align-items:center; text-align:left;
       min-height:118px; border-radius:24px; border:3px solid rgba(255,255,255,.05); padding:24px 30px;
@@ -111,23 +108,20 @@
     <header>
       <div class="branding">
         <h1 id="page-title">우리집 영상관</h1>
-        <p id="header-copy" class="header-copy">부모님이 편하게 볼 수 있게 만든 우리집 전용 영상관이에요.</p>
       </div>
       <div id="brand-mark" class="mark" aria-hidden="true">🏠</div>
     </header>
     <section id="home">
-      <p class="subtitle">보고 싶은 곳을 선택하세요</p>
       <div class="menu" id="menu"></div>
     </section>
     <section id="listing" hidden>
       <div class="titlebar">
-        <button id="back" class="back remote-focus" type="button"><span class="icon" aria-hidden="true">🏠</span><span class="label"><span>처음으로</span><small>홈으로 돌아가기</small></span></button>
+        <button id="back" class="back remote-focus" type="button"><span class="icon" aria-hidden="true">🏠</span><span class="label"><span>처음으로</span></span></button>
       </div>
       <div class="items" id="items"></div>
     </section>
     <p id="error" class="error" hidden></p>
     <p id="sync-status" class="foot" hidden></p>
-    <p id="guide-text" class="foot">방향키로 이동 · 확인 버튼으로 선택 · 뒤로 가기로 이전 화면</p>
   </main>
   <script src="catalog.js"></script>
   <script src="firebase-config.js"></script>
@@ -147,8 +141,6 @@
       var menu = document.getElementById('menu');
       var items = document.getElementById('items');
       var pageTitle = document.getElementById('page-title');
-      var headerCopy = document.getElementById('header-copy');
-      var guideText = document.getElementById('guide-text');
       var brandMark = document.getElementById('brand-mark');
       var errorEl = document.getElementById('error');
       var backBtn = document.getElementById('back');
@@ -226,15 +218,11 @@
         if(!isListing){
           document.title='우리집 영상관';
           pageTitle.textContent='우리집 영상관';
-          headerCopy.textContent='부모님이 편하게 볼 수 있게 만든 우리집 전용 영상관이에요.';
-          guideText.textContent='방향키로 이동 · 확인 버튼으로 선택 · 뒤로 가기로 이전 화면';
           addClassFocus(null);
           return;
         }
         document.title=cat.title+' · 우리집 영상관';
         pageTitle.textContent=cat.title;
-        headerCopy.textContent='보고 싶은 작품을 골라 바로 재생하세요.';
-        guideText.textContent='위아래 방향키로 이동 · 확인 버튼으로 선택 · 뒤로 가기로 이전 화면';
         items.textContent='';
         var entries=records.filter(function(item){return item && (id==='favorites'? item.favorite===true : item.category===id);});
         if(!entries.length){var empty=document.createElement('p'); empty.className='empty'; empty.textContent='아직 등록된 작품이 없어요.';items.appendChild(empty);}
