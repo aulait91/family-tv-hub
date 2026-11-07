@@ -2,67 +2,134 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>우리집 영상관 · 목록 관리</title>
+<title>우리집 영상관 · 원격 관리</title>
 <style>
-:root{font-family:system-ui,'Noto Sans KR',sans-serif;color:#1e2a35;background:#f4f7fb}*{box-sizing:border-box}body{margin:0}main{max-width:850px;margin:0 auto;padding:22px}h1{margin:6px 0}p{line-height:1.6}.note{background:#e7f1fd;border-radius:12px;padding:16px;margin:16px 0}button,.file{font:inherit;border:1px solid #afbfcd;border-radius:10px;padding:9px 14px;background:white;cursor:pointer}button.primary{background:#145d93;border-color:#145d93;color:white;font-weight:700}.tools{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}.list{display:grid;gap:8px;margin:14px 0}.record{border:1px solid #d9e0e7;background:white;padding:12px;border-radius:12px;display:flex;align-items:center;gap:12px}.record .info{flex:1;min-width:0}.record .info small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#536779}.record .actions{display:flex;gap:5px;flex-wrap:wrap}.record button{padding:7px 9px}form{background:#fff;border:1px solid #d9e0e7;padding:20px;border-radius:12px;display:grid;gap:12px}label{display:grid;gap:6px;font-weight:650}input,select{font:inherit;border:1px solid #a1b1c2;border-radius:8px;padding:12px;width:100%}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.row label{display:flex;align-items:center;font-weight:400}.row input[type=checkbox]{width:20px;height:20px}#status{min-height:24px;color:#165f43}.warning{color:#89421d}.hidden{display:none} @media(max-width:600px){.record{flex-wrap:wrap}.record .actions{width:100%}}
+:root{font-family:system-ui,'Noto Sans KR',sans-serif;color:#1e2a35;background:#f4f7fb}*{box-sizing:border-box}body{margin:0}main{max-width:880px;margin:0 auto;padding:22px}h1{margin:6px 0}p{line-height:1.6}.note{background:#e7f1fd;border-radius:12px;padding:16px;margin:16px 0}button,.file{font:inherit;border:1px solid #afbfcd;border-radius:10px;padding:9px 14px;background:white;cursor:pointer}button:disabled{opacity:.45;cursor:not-allowed}button.primary{background:#145d93;border-color:#145d93;color:white;font-weight:700}.tools{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}.list{display:grid;gap:8px;margin:14px 0}.record{border:1px solid #d9e0e7;background:white;padding:12px;border-radius:12px;display:flex;align-items:center;gap:12px}.record .info{flex:1;min-width:0}.record .info small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#536779}.record .actions{display:flex;gap:5px;flex-wrap:wrap}.record button{padding:7px 9px}form{background:#fff;border:1px solid #d9e0e7;padding:20px;border-radius:12px;display:grid;gap:12px}label{display:grid;gap:6px;font-weight:650}input,select{font:inherit;border:1px solid #a1b1c2;border-radius:8px;padding:12px;width:100%}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.row label{display:flex;align-items:center;font-weight:400}.row input[type=checkbox]{width:20px;height:20px}#status{min-height:24px;color:#165f43}.warning{color:#89421d}.hidden{display:none}.auth{border:1px solid #d9e0e7;background:white;border-radius:12px;padding:16px}.auth small{display:block;overflow-wrap:anywhere}.danger{color:#a13131}code{overflow-wrap:anywhere} @media(max-width:600px){.record{flex-wrap:wrap}.record .actions{width:100%}}
 </style>
 </head><body><main>
 <h1>우리집 영상관 관리</h1>
-<p>여기는 <strong>관리자 PC용</strong> 페이지야. 등록한 제목과 URL을 수정한 뒤 <strong>목록 파일 내려받기</strong>를 눌러 <code>catalog.js</code>를 교체해 줘.</p>
-<div class="note">이 버전은 서버 없이 동작하는 무료 정적 사이트야. 수정 사항을 TV에 반영하려면 <strong>내려받은 catalog.js를 GitHub 저장소에도 업로드해 커밋</strong>해야 해. 이 관리자 화면 자체가 TV 목록을 실시간으로 수정하는 건 아니야.</div>
-<div class="tools"><button id="add" class="primary">+ 작품 추가</button><button id="download" class="primary">목록 파일 내려받기</button><button id="reload">원본 목록 다시 불러오기</button></div>
-<p id="status" role="status"></p><div class="list" id="records"></div>
+<p>여기서 작품 제목과 첫 영상 주소를 바꾸고 <strong>「사이트에 저장」</strong>을 누르면 부모님 TV에도 자동 반영돼요.</p>
+<div class="note" id="setup-note">Firebase 연결 전에는 저장할 수 없어요. 동봉된 README의 Firebase 설정을 먼저 완료해 주세요.</div>
+<div class="auth">
+  <div class="tools"><button id="login" class="primary">구글 계정으로 로그인</button><button id="logout" hidden>로그아웃</button></div>
+  <small id="auth-status" aria-live="polite">로그인이 필요합니다.</small>
+  <small id="uid-row" hidden>관리자 UID (보안 규칙 설정용): <code id="uid"></code> <button id="copy-uid" type="button">UID 복사</button></small>
+</div>
+<div class="tools">
+  <button id="add" class="primary" disabled>+ 작품 추가</button>
+  <button id="publish" class="primary" disabled>사이트에 저장</button>
+  <button id="reload" disabled>온라인 목록 다시 읽기</button>
+  <button id="download">목록 백업(JSON)</button>
+  <label class="file">백업 불러오기 <input type="file" id="upload" accept=".json,application/json" hidden></label>
+</div>
+<p id="status" role="status" aria-live="polite"></p>
+<div class="list" id="records"></div>
 <form id="editor" class="hidden">
 <h2 id="editor-title">작품 등록</h2>
 <label>카테고리<select id="category"><option value="drama">드라마</option><option value="movie">영화</option><option value="variety">예능</option></select></label>
 <label>작품 제목<input id="name" required maxlength="120" placeholder="예: 드라마 제목"></label>
-<label>첫 영상 주소 (예: 1화 URL)<input id="url" type="url" placeholder="https://..."></label>
+<label>첫 영상 주소 (1화 또는 첫 영상 URL)<input id="url" type="url" placeholder="https://..."></label>
 <div class="row"><label><input id="favorite" type="checkbox"> 자주 보기에 표시</label></div>
 <div class="row"><button type="submit" class="primary">목록에 반영</button><button id="cancel" type="button">취소</button></div>
-<p class="warning">등록할 때는 검색 결과 페이지가 아니라 부모님이 실제로 시청할 첫 영상 페이지의 주소를 사용하세요.</p>
+<p class="warning">URL에는 검색 결과가 아니라 실제로 영상이 나오는 페이지 주소를 넣어 주세요.</p>
 </form>
-<p><strong>사용 순서:</strong> 제목 등록 → 목록 파일 내려받기 → 기존 <code>catalog.js</code> 덮어쓰기 → GitHub Pages 재게시 → TV 브라우저에서 홈페이지 새로고침.</p>
+<p>참고: 목록을 수정한 뒤 <strong>사이트에 저장</strong>을 눌러야 부모님 TV에 반영돼요. JSON 백업은 별도 보관용입니다.</p>
 <script src="catalog.js"></script>
+<script src="firebase-config.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script>
 (function(){'use strict';
 var cats={drama:'드라마',movie:'영화',variety:'예능'};
 var current=Array.isArray(window.SITE_CATALOG)?JSON.parse(JSON.stringify(window.SITE_CATALOG)):[];
-var editing=null;
+var dirty=false,ready=false,editing=null,saving=false,auth=null,docRef=null,uid='';
 var list=document.getElementById('records'),form=document.getElementById('editor'),status=document.getElementById('status');
 var category=document.getElementById('category'),name=document.getElementById('name'),url=document.getElementById('url'),favorite=document.getElementById('favorite');
+var add=document.getElementById('add'),publish=document.getElementById('publish'),reload=document.getElementById('reload');
 function msg(t){status.textContent=t;}
-function render(){list.textContent=''; current.forEach(function(item,i){
+function controls(){add.disabled=!ready||saving;reload.disabled=!ready||saving;publish.disabled=!ready||saving||!dirty;}
+function modified(text){dirty=true;controls();render();msg(text||'변경 사항이 있어요. 「사이트에 저장」을 눌러 반영해 주세요.');}
+function validUrl(raw){if(typeof raw!=='string'||!raw.trim())return true;try{var u=new URL(raw);return u.protocol==='http:'||u.protocol==='https:';}catch(_){return false;}}
+function validItem(x){return x&&typeof x.id==='string'&&x.id.length<=100&&cats[x.category]&&typeof x.title==='string'&&x.title.trim()&&x.title.length<=120&&typeof x.url==='string'&&x.url.length<=2048&&validUrl(x.url)&&typeof x.favorite==='boolean';}
+function validItems(xs){return Array.isArray(xs)&&xs.length<=200&&xs.every(validItem);}
+function render(){list.textContent='';current.forEach(function(item,i){
   var div=document.createElement('div');div.className='record';
   var info=document.createElement('div');info.className='info';
   var title=document.createElement('strong');title.textContent=(cats[item.category]||'기타')+' · '+item.title+(item.favorite?' ★':'');
   var link=document.createElement('small');link.textContent=item.url||'(주소 미등록)';info.append(title,link);
   var actions=document.createElement('div');actions.className='actions';
-  function act(t,fn){var b=document.createElement('button');b.type='button';b.textContent=t;b.addEventListener('click',fn);actions.appendChild(b);}
+  function act(t,fn){var b=document.createElement('button');b.type='button';b.textContent=t;b.disabled=!ready||saving;b.addEventListener('click',fn);actions.appendChild(b);}
   act('수정',function(){edit(i);});
-  act('↑',function(){var j=i-1;while(j>=0&&current[j].category!==item.category)j--;if(j>=0){var temp=current[j];current[j]=current[i];current[i]=temp;render();msg('같은 카테고리 안에서 순서를 바꿨어. 파일을 내려받아 반영해 줘.');}});
-  act('↓',function(){var j=i+1;while(j<current.length&&current[j].category!==item.category)j++;if(j<current.length){var temp=current[j];current[j]=current[i];current[i]=temp;render();msg('같은 카테고리 안에서 순서를 바꿨어. 파일을 내려받아 반영해 줘.');}});
-  act('삭제',function(){if(confirm('이 작품을 목록에서 삭제할까요?')){current.splice(i,1);render();msg('목록에서 삭제했어. 파일을 내려받아 반영해 줘.');}});
+  act('↑',function(){var j=i-1;while(j>=0&&current[j].category!==item.category)j--;if(j>=0){var temp=current[j];current[j]=current[i];current[i]=temp;modified();}});
+  act('↓',function(){var j=i+1;while(j<current.length&&current[j].category!==item.category)j++;if(j<current.length){var temp=current[j];current[j]=current[i];current[i]=temp;modified();}});
+  act('삭제',function(){if(confirm('이 작품을 목록에서 삭제할까요?')){current.splice(i,1);modified();}});
   div.append(info,actions);list.appendChild(div);
 });if(!current.length){var p=document.createElement('p');p.textContent='등록된 작품이 없습니다.';list.appendChild(p);}}
-function edit(i){editing=i;form.classList.remove('hidden');document.getElementById('editor-title').textContent=i===null?'작품 등록':'작품 수정';
+function edit(i){if(!ready)return;editing=i;form.classList.remove('hidden');document.getElementById('editor-title').textContent=i===null?'작품 등록':'작품 수정';
  var v=i===null?{category:'drama',title:'',url:'',favorite:false}:current[i];
- category.value=v.category;name.value=v.title;url.value=v.url||'';favorite.checked=Boolean(v.favorite);name.focus();form.scrollIntoView({behavior:'smooth',block:'nearest'});
-}
-document.getElementById('add').addEventListener('click',function(){edit(null);});
+ category.value=v.category;name.value=v.title;url.value=v.url||'';favorite.checked=Boolean(v.favorite);name.focus();form.scrollIntoView({behavior:'smooth',block:'nearest'});}
+add.addEventListener('click',function(){edit(null);});
 document.getElementById('cancel').addEventListener('click',function(){form.classList.add('hidden');});
-form.addEventListener('submit',function(e){e.preventDefault();var raw=url.value.trim();if(raw){try{var u=new URL(raw);if(!['http:','https:'].includes(u.protocol))throw new Error();}catch(_){alert('http:// 또는 https:// 로 시작하는 올바른 URL을 입력해 주세요.');return;}}
- var item={id:editing===null?'item-'+Date.now()+'-'+Math.floor(Math.random()*1000):current[editing].id,category:category.value,title:name.value.trim(),url:raw,favorite:favorite.checked};
- if(!item.title){alert('제목을 입력해 주세요.');return;}
- if(editing===null)current.push(item);else current[editing]=item;
- form.classList.add('hidden');render();msg('목록을 수정했어. 「목록 파일 내려받기」를 눌러 저장해 줘.');
+form.addEventListener('submit',function(e){e.preventDefault();if(!ready)return;
+ var raw=url.value.trim();if(!validUrl(raw)){alert('http:// 또는 https:// 로 시작하는 URL을 입력해 주세요.');return;}
+ var item={id:editing===null?'item-'+Date.now()+'-'+Math.floor(Math.random()*100000):current[editing].id,category:category.value,title:name.value.trim(),url:raw,favorite:favorite.checked};
+ if(!validItem(item)){alert('작품 제목이나 주소를 확인해 주세요.');return;}
+ if(editing===null){if(current.length>=200){alert('작품은 최대 200개까지 등록할 수 있어요.');return;}current.push(item);}else current[editing]=item;
+ form.classList.add('hidden');modified();
+});
+function asTextError(e){if(e&&e.code==='permission-denied')return '저장 권한이 없어요. Firestore Rules의 관리자 UID를 확인해 주세요.';return '저장 실패: '+(e&&e.message?e.message:'네트워크와 Firebase 설정 확인 필요');}
+function loadRemote(){if(!ready)return;if(dirty&&!confirm('저장하지 않은 변경 사항을 버리고 온라인 목록을 불러올까요?'))return;
+ saving=true;controls();msg('온라인 목록을 불러오는 중...');
+ docRef.get().then(function(snapshot){
+   if(snapshot.exists&&validItems(snapshot.data().items)){current=JSON.parse(JSON.stringify(snapshot.data().items));dirty=false;msg('온라인 목록을 불러왔어요.');}
+   else if(!snapshot.exists){current=Array.isArray(window.SITE_CATALOG)?JSON.parse(JSON.stringify(window.SITE_CATALOG)):[];dirty=true;msg('온라인 목록이 아직 없어요. 예시를 수정하거나 삭제한 뒤 「사이트에 저장」으로 첫 목록을 등록해 주세요.');}
+   else{msg('온라인 목록 형식이 올바르지 않아요. 기존 화면을 유지해요.');}
+ }).catch(function(e){msg('불러오기 실패: '+(e&&e.message?e.message:''));}).finally(function(){saving=false;controls();render();});
+}
+reload.addEventListener('click',loadRemote);
+publish.addEventListener('click',function(){if(!ready||saving)return;if(!validItems(current)){msg('저장 실패: 작품 제목과 URL을 확인해 주세요.');return;}
+ saving=true;controls();msg('온라인에 저장하는 중...');
+ docRef.set({schemaVersion:1,items:current,updatedAt:firebase.firestore.FieldValue.serverTimestamp()})
+ .then(function(){dirty=false;msg('저장 완료! 부모님 TV가 연결되어 있다면 목록이 자동 반영돼요.');})
+ .catch(function(e){msg(asTextError(e));})
+ .finally(function(){saving=false;controls();render();});
 });
 document.getElementById('download').addEventListener('click',function(){
- var content='// 우리집 영상관 목록 — 관리자 페이지에서 생성됨\nwindow.SITE_CATALOG = '+JSON.stringify(current,null,2)+';\n';
- var blob=new Blob([content],{type:'text/javascript;charset=utf-8'});var a=document.createElement('a');var objectURL=URL.createObjectURL(blob);
- a.href=objectURL;a.download='catalog.js';document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(objectURL);},1000);msg('catalog.js를 내려받았어. 기존 파일을 교체하고 GitHub에 올려 줘.');
+ var blob=new Blob([JSON.stringify({schemaVersion:1,items:current},null,2)],{type:'application/json;charset=utf-8'});var a=document.createElement('a');var objectURL=URL.createObjectURL(blob);
+ a.href=objectURL;a.download='family-tv-backup.json';document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(objectURL);},2000);msg('현재 목록을 JSON으로 백업했어요.');
 });
-document.getElementById('reload').addEventListener('click',function(){if(confirm('저장하지 않은 수정 사항을 버리고 원본 목록으로 돌아갈까요?')){current=JSON.parse(JSON.stringify(window.SITE_CATALOG||[]));form.classList.add('hidden');render();msg('원본 목록을 다시 불러왔어.');}});
-window.addEventListener('beforeunload',function(e){if(status.textContent.indexOf('목록을 수정')!==-1){e.preventDefault();e.returnValue='';}});
-render();
+document.getElementById('upload').addEventListener('change',function(e){
+ var file=e.target.files&&e.target.files[0];if(!file)return;
+ if(!ready){msg('로그인 후 백업을 불러올 수 있어요.');e.target.value='';return;}
+ var reader=new FileReader();reader.onload=function(){try{var parsed=JSON.parse(reader.result),items=Array.isArray(parsed)?parsed:parsed.items;
+ if(!validItems(items))throw new Error('목록 형식이 잘못되었어요.');if(!confirm('현재 편집 중인 목록을 백업 내용으로 교체할까요?'))return;
+ current=JSON.parse(JSON.stringify(items));modified('백업을 불러왔어요. 온라인 반영은 「사이트에 저장」을 눌러 주세요.');}
+ catch(err){msg('백업 불러오기 실패: '+err.message);}finally{e.target.value='';}};reader.readAsText(file);
+});
+function initialize(){
+ var cfg=window.FAMILY_TV_FIREBASE;
+ if(!cfg||!cfg.apiKey||!cfg.projectId||!cfg.authDomain||!cfg.appId||!window.firebase||!firebase.auth||!firebase.firestore){
+  msg('Firebase 설정이 필요해요. firebase-config.js를 작성하고 다시 접속해 주세요.');render();return;
+ }
+ try {
+  var app=firebase.apps.length?firebase.app():firebase.initializeApp(cfg);
+  auth=app.auth();docRef=app.firestore().doc('familyTv/catalog');
+  document.getElementById('setup-note').textContent='로그인 후 목록을 수정하고 「사이트에 저장」을 눌러 주세요. 로그인만으로 수정 권한이 생기는 것은 아니며 Firestore 보안 규칙에서 관리자 UID를 허용해야 해요.';
+  document.getElementById('login').addEventListener('click',function(){auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(function(e){msg('구글 로그인 실패: '+e.message+' (Firebase 인증 도메인 설정을 확인해 주세요.)');});});
+  document.getElementById('logout').addEventListener('click',function(){if(dirty&&!confirm('저장하지 않은 변경 사항을 버리고 로그아웃할까요?'))return;auth.signOut();});
+  document.getElementById('copy-uid').addEventListener('click',function(){var id=document.getElementById('uid').textContent;if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(id).then(function(){msg('UID를 복사했어요.');});});
+  auth.onAuthStateChanged(function(user){
+    ready=Boolean(user);uid=user?user.uid:'';dirty=false;form.classList.add('hidden');
+    document.getElementById('login').hidden=Boolean(user);document.getElementById('logout').hidden=!user;
+    document.getElementById('uid-row').hidden=!user;document.getElementById('uid').textContent=uid;
+    document.getElementById('auth-status').textContent=user?'로그인: '+(user.email||'구글 계정'):'로그인이 필요합니다.';
+    controls();render();
+    if(user)loadRemote();else msg('구글 로그인 후 작품을 편집할 수 있어요.');
+  });
+ }catch(e){msg('Firebase 초기화 실패: '+e.message);render();}
+}
+window.addEventListener('beforeunload',function(e){if(dirty){e.preventDefault();e.returnValue='';}});
+render();initialize();
 }());
 </script></main></body></html>

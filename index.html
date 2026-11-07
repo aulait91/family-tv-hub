@@ -50,9 +50,13 @@
       <div class="items" id="items"></div>
     </section>
     <p id="error" class="error" hidden></p>
+    <p id="sync-status" class="foot" hidden></p>
     <p class="foot">방향키로 이동 · 확인 버튼으로 선택 · 뒤로 가기로 이전 화면</p>
   </main>
   <script src="catalog.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
   <script>
     (function () {
       'use strict';
@@ -70,6 +74,48 @@
       var errorEl = document.getElementById('error');
       var backBtn = document.getElementById('back');
       var records = Array.isArray(window.SITE_CATALOG) ? window.SITE_CATALOG : [];
+      var syncStatus = document.getElementById('sync-status');
+      // 서버 연결이 끊겨도 마지막으로 받아 온 목록을 보여 줍니다.
+      try {
+        var cached = JSON.parse(localStorage.getItem('familyTvCatalogCache') || 'null');
+        if (Array.isArray(cached)) records = cached;
+      } catch (_) { /* 저장소 차단 등: 기본 catalog.js 사용 */ }
+      function syncMessage(message) {
+        syncStatus.textContent = message || '';
+        syncStatus.hidden = !message;
+      }
+      function initOnlineCatalog() {
+        var cfg = window.FAMILY_TV_FIREBASE;
+        if (!cfg || !cfg.apiKey || !cfg.projectId) return; // 아직 설정 전에는 기존 사이트 그대로
+        if (!window.firebase || !firebase.firestore) {
+          syncMessage('온라인 목록을 불러오지 못했어요. 저장된 목록을 표시하고 있어요.');
+          return;
+        }
+        try {
+          var app = firebase.apps.length ? firebase.app() : firebase.initializeApp(cfg);
+          app.firestore().doc('familyTv/catalog').onSnapshot(function(snapshot) {
+            if (!snapshot.exists || !Array.isArray(snapshot.data().items)) {
+              syncMessage('아직 온라인 작품 목록이 등록되지 않았어요.');
+              return;
+            }
+            var fresh = snapshot.data().items;
+            if (JSON.stringify(records) !== JSON.stringify(fresh)) {
+              records = fresh;
+              try { localStorage.setItem('familyTvCatalogCache', JSON.stringify(fresh)); } catch (_) {}
+              render();
+            }
+            syncMessage('');
+          }, function(error) {
+            if (error && error.code === 'permission-denied') {
+              syncMessage('온라인 목록 연결을 준비 중이에요. 기존 목록을 표시하고 있어요.');
+            } else {
+              syncMessage('인터넷 연결을 확인해 주세요. 마지막으로 저장된 목록을 표시하고 있어요.');
+            }
+          });
+        } catch (_) {
+          syncMessage('온라인 목록에 연결하지 못했어요. 저장된 목록을 표시하고 있어요.');
+        }
+      }
       function safeUrl(raw) {
         if (typeof raw !== 'string' || !raw.trim()) return '';
         try { var u=new URL(raw.trim()); return u.protocol==='https:' || u.protocol==='http:' ? u.href : ''; }
@@ -139,6 +185,7 @@
       });
       window.addEventListener('hashchange',render);window.addEventListener('popstate',render);
       render();
+      initOnlineCatalog();
     }());
   </script>
 </body>
