@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>우리집 영상관 · 원격 관리</title>
 <style>
-:root{font-family:system-ui,'Noto Sans KR',sans-serif;color:#1e2a35;background:#f4f7fb}*{box-sizing:border-box}body{margin:0}main{max-width:880px;margin:0 auto;padding:22px}h1{margin:6px 0}p{line-height:1.6}.note{background:#e7f1fd;border-radius:12px;padding:16px;margin:16px 0}button,.file{font:inherit;border:1px solid #afbfcd;border-radius:10px;padding:9px 14px;background:white;cursor:pointer}button:disabled{opacity:.45;cursor:not-allowed}button.primary{background:#145d93;border-color:#145d93;color:white;font-weight:700}.tools{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}.list{display:grid;gap:8px;margin:14px 0}.record{border:1px solid #d9e0e7;background:white;padding:12px;border-radius:12px;display:flex;align-items:center;gap:12px}.record .info{flex:1;min-width:0}.record .info small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#536779}.record .actions{display:flex;gap:5px;flex-wrap:wrap}.record button{padding:7px 9px}form{background:#fff;border:1px solid #d9e0e7;padding:20px;border-radius:12px;display:grid;gap:12px}label{display:grid;gap:6px;font-weight:650}input,select{font:inherit;border:1px solid #a1b1c2;border-radius:8px;padding:12px;width:100%}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.row label{display:flex;align-items:center;font-weight:400}.row input[type=checkbox]{width:20px;height:20px}#status{min-height:24px;color:#165f43}.warning{color:#89421d}.hidden{display:none}.auth{border:1px solid #d9e0e7;background:white;border-radius:12px;padding:16px}.auth small{display:block;overflow-wrap:anywhere}.danger{color:#a13131}code{overflow-wrap:anywhere}.category-section{background:#fff;border:1px solid #d9e0e7;border-left:6px solid #567daa;border-radius:16px;padding:16px;margin:10px 0 20px}.category-section[data-category="movie"]{border-left-color:#568d77}.category-section[data-category="variety"]{border-left-color:#9575aa}.category-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}.category-heading h2{font-size:1.4rem;margin:0}.category-heading .count{color:#667887;font-weight:500;font-size:.95rem}.category-records{display:grid;gap:8px}.category-empty{color:#738293;margin:10px 0 14px}.category-add{font-weight:700}.category-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.category-section.sorting{border-color:#5a88ad;box-shadow:0 0 0 2px #d5eafb}.category-records.sorting{user-select:none}.drag-handle{background:#e5f1ff;border-color:#87abd1;font-weight:700;cursor:grab;touch-action:none;user-select:none;min-height:45px}.drag-handle:active{cursor:grabbing}.drag-handle:focus-visible{outline:3px solid #397abb;outline-offset:2px}.record.dragging{background:#e4f1ff;border:2px solid #3279ab;box-shadow:0 8px 20px #153b5826}.reorder-hint{margin:8px 0 12px;color:#45667b;font-size:.95rem}.category-actions button{min-height:40px} @media(max-width:600px){.record{flex-wrap:wrap}.record .actions{width:100%}}
+:root{font-family:system-ui,'Noto Sans KR',sans-serif;color:#1e2a35;background:#f4f7fb}*{box-sizing:border-box}body{margin:0}main{max-width:880px;margin:0 auto;padding:22px}h1{margin:6px 0}p{line-height:1.6}.note{background:#e7f1fd;border-radius:12px;padding:16px;margin:16px 0}button,.file{font:inherit;border:1px solid #afbfcd;border-radius:10px;padding:9px 14px;background:white;cursor:pointer}button:disabled{opacity:.45;cursor:not-allowed}button.primary{background:#145d93;border-color:#145d93;color:white;font-weight:700}.tools{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}.list{display:grid;gap:8px;margin:14px 0}.record{border:1px solid #d9e0e7;background:white;padding:12px;border-radius:12px;display:flex;align-items:center;gap:12px}.record .info{flex:1;min-width:0}.record .info small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#536779}.record .actions{display:flex;gap:5px;flex-wrap:wrap}.record button{padding:7px 9px}form{background:#fff;border:1px solid #d9e0e7;padding:20px;border-radius:12px;display:grid;gap:12px}label{display:grid;gap:6px;font-weight:650}input,select{font:inherit;border:1px solid #a1b1c2;border-radius:8px;padding:12px;width:100%}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.row label{display:flex;align-items:center;font-weight:400}.row input[type=checkbox]{width:20px;height:20px}#status{min-height:24px;color:#165f43}.warning{color:#89421d}.hidden{display:none}.auth{border:1px solid #d9e0e7;background:white;border-radius:12px;padding:16px}.auth small{display:block;overflow-wrap:anywhere}.danger{color:#a13131}code{overflow-wrap:anywhere}.category-section{background:#fff;border:1px solid #d9e0e7;border-left:6px solid #567daa;border-radius:16px;padding:16px;margin:10px 0 20px}.category-section[data-category="movie"]{border-left-color:#568d77}.category-section[data-category="variety"]{border-left-color:#9575aa}.category-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}.category-heading h2{font-size:1.4rem;margin:0}.category-heading .count{color:#667887;font-weight:500;font-size:.95rem}.category-records{display:grid;gap:8px}.category-empty{color:#738293;margin:10px 0 14px}.category-add{font-weight:700}.category-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.category-section.sorting{border-color:#5a88ad;box-shadow:0 0 0 2px #d5eafb}.category-records.sorting{user-select:none}.category-records.sorting .record{cursor:grab;touch-action:none;user-select:none;border:2px solid #c0d8ee;transition:background .12s,border-color .12s,box-shadow .12s,transform .12s}.category-records.sorting .record:focus-visible{outline:3px solid #397abb;outline-offset:2px;background:#eff7ff}.category-records.sorting .record.dragging{cursor:grabbing;background:#d7ecff;border:3px solid #1769ae;box-shadow:0 10px 30px #154e8347,0 0 0 4px #b8deff;transform:scale(1.015);position:relative;z-index:2}.category-records.sorting .record.drop-target:not(.dragging){background:#f0f8ff;border-color:#4b9bdd}.reorder-grip{font-size:25px;font-weight:700;color:#6d8ba2;flex:none;pointer-events:none}.reorder-hint{margin:8px 0 12px;color:#45667b;font-size:.95rem}.category-actions button{min-height:40px} @media(max-width:600px){.record{flex-wrap:wrap}.record .actions{width:100%}}
 </style>
 </head><body><main>
 <h1>우리집 영상관 관리</h1>
@@ -88,11 +88,12 @@ function saveReorder(){
  if(changed)modified();
  else {render();msg('변경된 순서가 없어 저장하지 않았어요.');}
 }
-function onHandlePointerDown(event,row,group){
- if(!reorderCategory||saving||!ready||event.isPrimary===false ||
+function onRowPointerDown(event,row,group){
+ if(!reorderCategory||saving||!ready||dragState||event.isPrimary===false ||
     (event.pointerType==='mouse'&&event.button!==0))return;
  event.preventDefault();
  dragState={pointerId:event.pointerId,row:row,group:group,startY:event.clientY};
+ row.focus();
  row.classList.add('dragging');
 }
 window.addEventListener('pointermove',function(event){
@@ -101,17 +102,19 @@ window.addEventListener('pointermove',function(event){
  event.preventDefault();
  var siblings=Array.prototype.slice.call(drag.group.querySelectorAll('.record')).filter(function(node){return node!==drag.row;});
  var target=null;
+ siblings.forEach(function(node){node.classList.remove('drop-target');});
  for(var i=0;i<siblings.length;i++){
    var rect=siblings[i].getBoundingClientRect();
    if(event.clientY<rect.top+rect.height/2){target=siblings[i];break;}
  }
- if(target)drag.group.insertBefore(drag.row,target);
- else drag.group.appendChild(drag.row);
+ if(target){target.classList.add('drop-target');drag.group.insertBefore(drag.row,target);}
+ else {if(siblings.length)siblings[siblings.length-1].classList.add('drop-target');drag.group.appendChild(drag.row);}
 });
 function finishDrag(event,cancel){
  if(!dragState||event.pointerId!==dragState.pointerId)return;
  var drag=dragState;dragState=null;
  drag.row.classList.remove('dragging');
+ drag.group.querySelectorAll('.drop-target').forEach(function(node){node.classList.remove('drop-target');});
  if(cancel){render();return;}
  reorderOrder=Array.prototype.slice.call(drag.group.querySelectorAll('.record')).map(function(node){return Number(node.dataset.originalIndex);});
  render();
@@ -126,7 +129,7 @@ function moveDraftByKeyboard(index,delta){
  if(at<0||next<0||next>=reorderOrder.length)return;
  var old=reorderOrder[at];reorderOrder[at]=reorderOrder[next];reorderOrder[next]=old;
  render();
- var target=list.querySelector('.drag-handle[data-original-index="'+index+'"]');
+ var target=list.querySelector('.sorting .record[data-original-index="'+index+'"]');
  if(target)target.focus();
  msg('순서 변경 중이에요. 저장을 누르면 반영돼요.');
 }
@@ -169,7 +172,7 @@ function render(){
    heading.append(title,buttons);section.appendChild(heading);
    if(sorting){
      var hint=document.createElement('p');hint.className='reorder-hint';
-     hint.textContent='⠿ 이동 손잡이를 잡고 위아래로 끌어 정렬하세요. 저장 전에는 실제 목록에 반영되지 않아요.';
+     hint.textContent='작품 칸 전체를 잡고 위아래로 끌어 순서를 바꿔요. 저장 전에는 반영되지 않아요.';
      section.appendChild(hint);
    }
    var group=document.createElement('div');group.className='category-records'+(sorting?' sorting':'');
@@ -185,16 +188,18 @@ function render(){
      info.append(itemTitle,link);
      var actions=document.createElement('div');actions.className='actions';
      if(sorting){
-       var handle=document.createElement('button');handle.type='button';handle.className='drag-handle';
-       handle.textContent='⠿ 이동';handle.dataset.originalIndex=String(i);
-       handle.setAttribute('aria-label',item.title+' 순서 이동. 드래그 또는 위아래 방향키 사용');
-       handle.addEventListener('pointerdown',function(event){onHandlePointerDown(event,div,group);});
-       handle.addEventListener('keydown',function(event){
+       div.tabIndex=0;
+       div.setAttribute('role','button');
+       div.setAttribute('aria-label',item.title+' 순서 변경. 카드를 드래그하거나 위아래 방향키를 누르세요.');
+       div.addEventListener('pointerdown',function(event){onRowPointerDown(event,div,group);});
+       div.addEventListener('keydown',function(event){
          if(event.key==='ArrowUp'||event.key==='ArrowDown'){
            event.preventDefault();moveDraftByKeyboard(i,event.key==='ArrowUp'?-1:1);
          }
        });
-       actions.appendChild(handle);
+       var grip=document.createElement('span');grip.className='reorder-grip';grip.textContent='↕';
+       grip.setAttribute('aria-hidden','true');
+       actions.appendChild(grip);
      }else{
        function act(text,fn){
          var button=document.createElement('button');button.type='button';button.textContent=text;
@@ -209,17 +214,18 @@ function render(){
    section.appendChild(group);list.appendChild(section);
  });
 }
-function edit(i,preferredCategory){if(!ready||saving||reorderCategory)return;editing=i;form.classList.remove('hidden');document.getElementById('editor-title').textContent=i===null?'작품 등록':'작품 수정';
+function edit(i,preferredCategory){if(!ready||saving||reorderCategory)return;editing=i;list.classList.add('hidden');form.classList.remove('hidden');document.getElementById('editor-title').textContent=i===null?'작품 등록':'작품 수정';
  document.getElementById('editor-submit').textContent=i===null?'등록하고 저장':'수정하고 저장';
  var v=i===null?{category:preferredCategory||'drama',title:'',url:'',favorite:false}:current[i];
  category.value=v.category;name.value=v.title;url.value=v.url||'';favorite.checked=Boolean(v.favorite);name.focus();form.scrollIntoView({behavior:'smooth',block:'nearest'});}
-document.getElementById('cancel').addEventListener('click',function(){form.classList.add('hidden');});
+function closeEditor(){form.classList.add('hidden');list.classList.remove('hidden');editing=null;}
+document.getElementById('cancel').addEventListener('click',function(){closeEditor();});
 form.addEventListener('submit',function(e){e.preventDefault();if(!ready||saving||reorderCategory)return;
  var raw=url.value.trim();if(!validUrl(raw)){alert('http:// 또는 https:// 로 시작하는 URL을 입력해 주세요.');return;}
  var item={id:editing===null?'item-'+Date.now()+'-'+Math.floor(Math.random()*100000):current[editing].id,category:category.value,title:name.value.trim(),url:raw,favorite:favorite.checked};
  if(!validItem(item)){alert('작품 제목이나 주소를 확인해 주세요.');return;}
  if(editing===null){if(current.length>=200){alert('작품은 최대 200개까지 등록할 수 있어요.');return;}current.push(item);}else current[editing]=item;
- form.classList.add('hidden');modified();
+ closeEditor();modified();
 });
 function asTextError(e){if(e&&e.code==='permission-denied')return '저장 권한이 없어요. Firestore Rules의 관리자 UID를 확인해 주세요.';return '저장 실패: '+(e&&e.message?e.message:'네트워크와 Firebase 설정 확인 필요');}
 function loadRemote(){if(!ready||saving||reorderCategory)return;if(dirty&&!confirm('저장하지 않은 변경 사항을 버리고 온라인 목록을 불러올까요?'))return;
@@ -278,7 +284,7 @@ function initialize(){
   document.getElementById('logout').addEventListener('click',function(){if(reorderCategory){msg('순서 저장 또는 취소 후 로그아웃해 주세요.');return;}if(saving){msg('저장 중이에요. 저장 완료 후 로그아웃해 주세요.');return;}if(dirty&&!confirm('저장하지 않은 변경 사항을 버리고 로그아웃할까요?'))return;auth.signOut();});
   document.getElementById('copy-uid').addEventListener('click',function(){var id=document.getElementById('uid').textContent;if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(id).then(function(){msg('UID를 복사했어요.');});});
   auth.onAuthStateChanged(function(user){
-    ready=Boolean(user);uid=user?user.uid:'';dirty=false;saveRevision=0;reorderCategory=null;reorderOrder=[];dragState=null;form.classList.add('hidden');
+    ready=Boolean(user);uid=user?user.uid:'';dirty=false;saveRevision=0;reorderCategory=null;reorderOrder=[];dragState=null;closeEditor();
     document.getElementById('login').hidden=Boolean(user);document.getElementById('logout').hidden=!user;
     document.getElementById('uid-row').hidden=!user;document.getElementById('uid').textContent=uid;
     document.getElementById('auth-status').textContent=user?'로그인: '+(user.email||'구글 계정'):'로그인이 필요합니다.';
